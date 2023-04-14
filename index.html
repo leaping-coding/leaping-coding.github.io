@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script>
+		
+var distance = 0;
+var moveStep = 0;
+var progress = 0;
+var canHandle = false;
+var time = 300;
+var container = document.getElementsByClassName('container')[0];
+var list = document.getElementsByClassName('ws_nw')[0];
+var width = container.offsetWidth;
+var scrollX = width;
+container.scrollTo(scrollX, 0);
+
+
+function step() {
+    progress += moveStep;
+    if ((distance - progress > 0 && distance > 0) || (distance - progress < 0 && distance < 0)) {
+        container.scrollTo(scrollX + progress, 0);
+        requestAnimationFrame(step);
+    } else {
+        progress = 0;
+        container.scrollTo(scrollX + distance, 0);
+        canHandle = false;
+    }
+}
+
+
+function slider(n) {
+    if (canHandle) {
+        return;
+    }
+    canHandle = true;
+    distance = n * width;
+    moveStep = Math.round(distance * 100 / Math.round(time / (100 / 6))) / 100;
+    var i = 0;
+    if (n > 0) {
+        while (i < n) {
+            list.appendChild(list.firstElementChild);
+            i++;
+        }
+    } else {
+        while (i < -n) {
+            list.insertBefore(list.lastElementChild, list.firstElementChild);
+            i++;
+        }
+    }
+    scrollX = width * (1 - n);
+    container.scrollTo(scrollX, 0);
+    requestAnimationFrame(step);
+}
+	</script>
+</head>
+<body>
+	<div class="fs_0 ps_rl w_fc mg_auto">
+		<div class="container ps_rl ws_nw dp_ib">
+			<div class="dp_ib ps_rl"> <span class="ps_ab">4</span> <img src="https://dummyimage.com/160x100" alt=""> </div>
+			<div class="dp_ib ps_rl"> <span class="ps_ab">1</span> <img src="https://dummyimage.com/160x100" alt=""> </div>
+			<div class="dp_ib ps_rl"> <span class="ps_ab">2</span> <img src="https://dummyimage.com/160x100" alt=""> </div>
+			<div class="dp_ib ps_rl"> <span class="ps_ab">3</span> <img src="https://dummyimage.com/160x100" alt=""> </div>
+		</div>
+		<div class="handlelist ps_ab">
+			<div class="pre handle dp_ib" onclick="slider(-1)"></div>
+			<div class="next handle dp_ib" onclick="slider(1)"></div>
+		</div>
+	</div>
+</body>
+</html>
